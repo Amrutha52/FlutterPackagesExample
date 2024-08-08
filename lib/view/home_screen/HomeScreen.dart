@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:image_picker/image_picker.dart';
 
 
 class HomeScreen extends StatefulWidget
@@ -27,10 +30,12 @@ class _HomeScreenState extends State<HomeScreen>
     'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
   ];
 
+  XFile? selectedImage;
 
   @override
   Widget build(BuildContext context)
   {
+
     final List<Widget> imageSliders = imgList
         .map((item) => Container(
       child: Container(
@@ -98,7 +103,39 @@ class _HomeScreenState extends State<HomeScreen>
                         autoPlay: true,
                       ),
                       items: imageSliders,
-                    ))
+                    )),
+                SizedBox(height: 10,),
+                selectedImage != null
+                    ? Image.file(File(selectedImage!.path))
+                    : Icon(Icons.image),// Restart cheyumbol image indavilla apo error varathe erikaan vendiyane terinary operator use cheythekane
+                SizedBox(height: 10,),
+                ElevatedButton(
+                    onPressed: () async {
+                      final ImagePicker picker = ImagePicker();
+                      // Pick an image.
+                      selectedImage = await picker.pickImage(source: ImageSource.gallery);
+                      // // Capture a photo.
+                      // final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+                      // // Pick a video.
+                      // final XFile? galleryVideo =
+                      // await picker.pickVideo(source: ImageSource.gallery);
+                      // // Capture a video.
+                      // final XFile? cameraVideo = await picker.pickVideo(source: ImageSource.camera);
+                      // // Pick multiple images.
+                      // final List<XFile> images = await picker.pickMultiImage();
+                      // // Pick singe image or video.
+                      // final XFile? media = await picker.pickMedia();
+                      //  // Pick multiple images and videos.
+                      // final List<XFile> medias = await picker.pickMultipleMedia();
+                      setState(() {});
+                      if(selectedImage != null)
+                        {
+
+                          print("selectedImagePath" + selectedImage!.path);
+                        }
+                    },
+                    child: Text("select")
+                )
               ],
             ),
           )
