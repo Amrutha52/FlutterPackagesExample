@@ -7,6 +7,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -32,6 +33,11 @@ class _HomeScreenState extends State<HomeScreen>
   ];
 
   XFile? selectedImage;
+  List<XFile> selectedImages = []; // List of selected image
+  final picker = ImagePicker();
+
+  // Obtain shared preferences.
+  late final SharedPreferences prefs;
 
   @override
   Widget build(BuildContext context)
@@ -136,7 +142,11 @@ class _HomeScreenState extends State<HomeScreen>
                         }
                     },
                     child: Text("select")
-                )
+                ),
+
+
+
+
               ],
             ),
           )
@@ -144,4 +154,32 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     );
   }
+
+  Future getImages() async
+  {
+    final pickedFile = await picker.pickMultiImage(
+        imageQuality: 100, // To set quality of images
+        maxHeight: 1000, // To set maxheight of images that you want in your app
+        maxWidth: 1000); // To set maxheight of images that you want in your app
+    List<XFile> xfilePick = pickedFile;
+
+    // if atleast 1 images is selected it will add
+    // all images in selectedImages
+    // variable so that we can easily show them in UI
+    if (xfilePick.isNotEmpty) {
+      for (var i = 0; i < xfilePick.length; i++) {
+        selectedImages.add(File(xfilePick[i].path) as XFile);
+      }
+      setState(
+            () {  },
+      );
+    } else {
+      // If no image is selected it will show a
+      // snackbar saying nothing is selected
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Nothing is selected')));
+    }
+
+  }
+
 }
